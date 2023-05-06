@@ -13,7 +13,7 @@ const port = 3000;
 // Apply security middleware
 app.use(helmet());
 
-const allowedOrigins = ['https:long-lane.co.uk'];
+const allowedOrigins = ['https://long-lane.co.uk'];
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
