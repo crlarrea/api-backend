@@ -14,26 +14,18 @@ const port = 3000;
 app.use(helmet());
 
 // CORS
-const allowedOrigins = ['https://long-lane.co.uk'];
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(null, false);
-    }
+ar allowlist = ['https://long-lane.co.uk']
+const corsOptionsDelegate = function (req, callback) {
+  let corsOptions;
+  if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false } // disable CORS for this request
   }
-};
+  callback(null, corsOptions) // callback expects two parameters: error and options
+}
 
-// Middleware to handle errors thrown by the cors package
-app.use((err, req, res, next) => {
-  if (err) {
-    res.status(403).send('Forbidden');
-  }
-});
 
-app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -56,7 +48,7 @@ app.use(
 app.use(hpp());
 
 // Define the route for the POST request
-app.post("/send-message", (req, res) => {
+app.post("/send-message",cors(corsOptionsDelegate), (req, res, next) => {
   const data = req.body.data;
 
   // Do something with the data, such as store it in a database
