@@ -20,7 +20,7 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
   optionsSuccessStatus: 200,
 };
-app.use(cors(corsOptions));
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -44,7 +44,7 @@ app.use(
 app.use(hpp());
 
 // Define the route for the POST request
-app.post("/send-message", (req, res) => {
+app.post("/send-message", cors(corsOptions), (req, res) => {
   const data = req.body.data;
 
   // Do something with the data, such as store it in a database
