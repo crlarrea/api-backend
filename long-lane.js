@@ -13,13 +13,18 @@ const port = 3000;
 // Apply security middleware
 app.use(helmet());
 
-// Apply CORS middleware to restrict requests to 'https://www.long-lane.co.uk'
+const whitelist = ['https://long-lane.co.uk'];
+
 const corsOptions = {
-  origin: "https://long-lane.co.uk",
-  methods: ["POST", "GET"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  optionsSuccessStatus: 200,
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 };
+
 app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
