@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Apply rate limiter middleware to prevent DOS attacks
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 3, // Limit each IP to 3 requests per windowMs
+  max: 50, // Limit each IP to 3 requests per windowMs
 });
 app.use(limiter);
 
