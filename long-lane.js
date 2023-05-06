@@ -14,17 +14,19 @@ const port = 3000;
 app.use(helmet());
 
 // CORS
-const allowlist = ['https://long-lane.co.uk']
-const corsOptionsDelegate = function (req, callback) {
-  let corsOptions;
-  if (allowlist.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false } // disable CORS for this request
-  }
-  callback(null, corsOptions) // callback expects two parameters: error and options
-}
+const whitelist = ["https://long-lane.co.uk"];
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(console.log(`${origin} blocked.`));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -48,7 +50,7 @@ app.use(
 app.use(hpp());
 
 // Define the route for the POST request
-app.post("/send-message",cors(corsOptionsDelegate), (req, res, next) => {
+app.post("/send-message", (req, res) => {
   const data = req.body.data;
 
   // Do something with the data, such as store it in a database
