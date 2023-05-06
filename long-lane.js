@@ -14,7 +14,14 @@ const port = 3000;
 app.use(helmet());
 
 // Apply CORS middleware to restrict requests to 'https://www.long-lane.co.uk'
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://long-lane.co.uk",
+    methods: ["POST", "GET"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    maxAge: 600,
+  })
+);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -22,7 +29,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Apply rate limiter middleware to prevent DOS attacks
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 50, // Limit each IP to 3 requests per windowMs
+  max: 3, // Limit each IP to 3 requests per windowMs
 });
 app.use(limiter);
 
