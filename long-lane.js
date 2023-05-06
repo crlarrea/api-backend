@@ -16,24 +16,17 @@ app.use(helmet());
 // CORS
 const allowedOrigins = ['https://long-lane.co.uk'];
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+const allowlist = ['https://long-lane.co.uk']
+var corsOptionsDelegate = function (req, callback) {
+  let corsOptions;
+  if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false } // disable CORS for this request
   }
-};
-
-// Middleware to handle errors thrown by the cors package
-app.use((err, req, res, next) => {
-  if (err) {
-    res.status(403).send('Forbidden');
-  }
-});
-
-app.use(cors(corsOptions));
+  callback(null, corsOptions) // callback expects two parameters: error and options
+}
+app.use(cors(corsOptionsDelegate));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
