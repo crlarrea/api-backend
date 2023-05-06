@@ -14,7 +14,7 @@ const port = 3000;
 app.use(helmet());
 
 // CORS
-ar allowlist = ['https://long-lane.co.uk']
+const allowlist = ['https://long-lane.co.uk']
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
