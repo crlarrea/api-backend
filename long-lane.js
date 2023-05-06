@@ -14,14 +14,13 @@ const port = 3000;
 app.use(helmet());
 
 // Apply CORS middleware to restrict requests to 'https://www.long-lane.co.uk'
-app.use(
-  cors({
-    origin: "https://long-lane.co.uk",
-    methods: ["POST", "GET"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    maxAge: 600,
-  })
-);
+const corsOptions = {
+  origin: "https://long-lane.co.uk",
+  methods: ["POST", "GET"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
