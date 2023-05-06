@@ -14,16 +14,16 @@ const port = 3000;
 app.use(helmet());
 
 // CORS
-const whitelist = ["https://long-lane.co.uk"];
+const allowedOrigins = ["https://long-lane.co.uk"];
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(console.log(`${origin} blocked.`));
+      callback(new Error('Not allowed by CORS'));
     }
-  },
+  }
 };
 
 app.use(cors(corsOptions));
@@ -57,6 +57,13 @@ app.post("/send-message", (req, res) => {
   console.log(data);
 
   return res.status(200).json({ message: "Data received" });
+});
+
+// Middleware to handle errors thrown by the cors package
+app.use((err, req, res, next) => {
+  if (err) {
+    res.status(403).send('Forbidden');
+  }
 });
 
 // Start the server
