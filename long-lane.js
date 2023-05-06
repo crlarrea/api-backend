@@ -13,18 +13,20 @@ const port = 3000;
 // Apply security middleware
 app.use(helmet());
 
+// CORS
 const allowedOrigins = ['https://long-lane.co.uk'];
 
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.indexOf(origin) > -1) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    next();
-  } else {
-    res.status(403).send('Forbidden');
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
   }
-});
+};
 
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
