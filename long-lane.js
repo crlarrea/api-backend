@@ -14,17 +14,24 @@ const port = 3000;
 app.use(helmet());
 
 // CORS
-const allowedOrigins = ["https://long-lane.co.uk"];
+const allowedOrigins = ['https://long-lane.co.uk'];
 
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      res.status(403).send("Forbidden");
+      callback(new Error('Not allowed by CORS'));
     }
-  },
+  }
 };
+
+// Middleware to handle errors thrown by the cors package
+app.use((err, req, res, next) => {
+  if (err) {
+    res.status(403).send('Forbidden');
+  }
+});
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
