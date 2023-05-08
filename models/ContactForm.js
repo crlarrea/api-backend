@@ -3,11 +3,17 @@ const { Schema, model } = require("mongoose");
 const ContactFormSchema = Schema({
   email: {
     type: String,
-    format: email,
+    trim: true,
     required: true,
   },
   name: {
     type: String,
+    trim: true,
+    required: true,
+  },
+  message: {
+    type: String,
+    trim:true,
     required: true,
   },
   date: {
@@ -16,5 +22,4 @@ const ContactFormSchema = Schema({
   },
 });
 
-module.exports = model("ContactForm", ContactFormSchema, "contact_form");
-
+module.exports = model("ContactForm", ContactFormSchema, "contact");
