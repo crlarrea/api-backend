@@ -1,42 +1,50 @@
-const { validateForm } = require("../helpers/validate");
+const { validateForm, validateEnquire } = require("../helpers/validate");
 const ContactForm = require("../models/ContactForm");
-const {sendToSlack} = require("../helpers/slack");
+const { sendToSlack } = require("../helpers/slack");
 
-const sendMessage = async (req, res) => {
-  // Collect params
-  const params = req.body;
-
-  // Validate form data
+const sendMessage = async (req, res, next) => {
   try {
-    await validateForm(params.data);
-  } catch (error) {
-    return res.status(400).json({
-      status: "error",
-      message: "Form fields validation failed",
-    });
-  }
-  sendToSlack(params.data)
+    // Validate form data
+    await validateForm(req);
 
-  // Create new object and save to DB
-  try {
-    const formData = await new ContactForm(params.data);
+    // Send message to Slack
+    await sendToSlack(req, res);
+
+    // Create new object and save to DB
+    const formData = await new ContactForm(req.body.data);
     const message = await formData.save();
-    console.log(message)
+    console.log(`Saved to DB: ${message}`);
+
     return res.status(200).json({
-      status: "success"
+      status: "success",
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).json({
-      status: "error",
-      message: "Failed to save to DB",
-    });
+    next(error);
   }
-
-
 };
 
+const enquire = async (req, res, next) => {
+  try {
+    // Validate form Enquiry
+    await validateEnquire(req);
+
+    // Send message to Slack
+    await sendToSlack(req, res);
+
+    // Create new object and save to DB
+    const formData = await new ContactForm(req.body.data);
+    const message = await formData.save();
+    console.log(`Saved to DB: ${message}`);
+
+    return res.status(200).json({
+      status: "success",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   sendMessage,
+  enquire,
 };

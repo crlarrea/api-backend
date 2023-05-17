@@ -32,12 +32,7 @@ const sanitizeOptions = {
   },
 };
 
-const corsError = (err, req, res, next) => {
-  if (err) {
-    console.log(err);
-    res.status(403).send("Forbidden");
-  }
-};
+
 
 module.exports = {
   helmet,
@@ -49,5 +44,4 @@ module.exports = {
   corsOptions,
   limiter,
   sanitizeOptions,
-  corsError,
 };

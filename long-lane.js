@@ -9,9 +9,9 @@ const {
   hpp,
   corsOptions,
   limiter,
-  sanitizeOptions,
-  corsError,
+  sanitizeOptions
 } = require("./helpers/security");
+const {errorHandler} = require('./helpers/errorHandler')
 const formRoutes = require("./routes/form");
 console.log("Starting App");
 
@@ -22,8 +22,6 @@ connection();
 app.use(helmet());
 app.use(cors(corsOptions));
 
-// Middleware to handle errors thrown by the cors package
-app.use(corsError);
 
 // Hide server fingerprint
 app.disable("x-powered-by");
@@ -44,6 +42,9 @@ app.use(hpp());
 
 // Loading the routes
 app.use("/api", formRoutes);
+
+// Middleware to handle errors
+app.use(errorHandler);
 
 // Start the server
 app.listen((port = process.env.PORT), () => {

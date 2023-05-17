@@ -1,15 +1,32 @@
 const validator = require("validator");
 
-const validateForm = (params) => {
-    
-    const validateEmail = !validator.isEmpty(params.email) || 
-                            !validator.isEmail(params.email);
+const validateForm = (req) => {
+  const data = req.body.data;
+  const validationOutput =
+    validator.isEmail(data.email) &&
+    validator.isLength(data.email, { min: 6, max: 50 }) &&
+    validator.isAlpha(data.name, "en-GB", { ignore: "-s'" }) &&
+    validator.isLength(data.name, { min: 5, max: 50 }) &&
+    validator.isLength(data.message, { min: 5, max: 300 });
 
-    if(!validateEmail){
-        throw new Error("API: failed to validate form fields.");
-    }
-}
+  if (!validationOutput) {
+    throw new Error("Failed to validate form fields.");
+  }
+};
 
+const validateEnquire = (req) => {
+  const data = req.body.data;
+  const validationOutput =
+    validator.isEmail(data.email) &&
+    validator.isLength(data.email, { min: 6, max: 50 }) &&
+    validator.isIn(data.plan, ["Starter", "Growth", "Pro"]) &&
+    validator.isIn(data.billing, ["Monthly", "Yearly"]);
+
+  if (!validationOutput) {
+    throw new Error("Failed to validate form fields.");
+  }
+};
 module.exports = {
-    validateForm
-}
+  validateForm,
+  validateEnquire,
+};
