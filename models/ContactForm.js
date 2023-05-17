@@ -35,6 +35,6 @@ const ContactSchema = Schema({
     type: Date,
     default: Date.now,
   },
-});
+}, { strict: true });
 
 module.exports = model("ContactForm", ContactSchema, "contact");
