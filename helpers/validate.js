@@ -6,7 +6,7 @@ const validateForm = (req) => {
     validator.isEmail(data.email) &&
     validator.isLength(data.email, { min: 6, max: 50 }) &&
     validator.isAlpha(data.name, "en-GB", { ignore: "-s'" }) &&
-    validator.isLength(data.name, { min: 5, max: 50 }) &&
+    validator.isLength(data.name, { min: 2, max: 50 }) &&
     validator.isLength(data.message, { min: 5, max: 300 });
 
   if (!validationOutput) {
