@@ -28,7 +28,7 @@ const ContactSchema = Schema({
   billing: {
     type: String,
     trim: true,
-    enum: ["Monthly", "Annual"],
+    enum: ["Monthly", "Yearly"],
   },
 
   date: {
