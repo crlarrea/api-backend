@@ -11,7 +11,7 @@ const ContactSchema = Schema({
   name: {
     type: String,
     trim: true,
-    min: 5,
+    min: 2,
     max: 300,
   },
   message: {
